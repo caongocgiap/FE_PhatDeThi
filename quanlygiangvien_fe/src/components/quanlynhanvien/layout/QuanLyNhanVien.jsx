@@ -1,6 +1,6 @@
 import "../style/QuanLyNhanVienStyle.css"
-import {Button, Input, Table} from "antd";
-import {useState} from "react";
+import {Button, Input, Table, Tooltip} from "antd";
+import {useEffect, useRef, useState} from "react";
 import {Container} from "react-bootstrap";
 import {
     DeleteOutlined,
@@ -37,9 +37,24 @@ const QuanLyNhanVien = () => {
     //state list NhanVien
     const {pageSize,totalPage,listNhanVien,tableLoading,getAllNhanVienChucVu} = useNhanVien();
 
+    const timeOutId = useRef(null);
+
+    const [firstRerender,setFirstRerender] = useState(false);
+
+    //Người dùng gõ xong
+    useEffect(() => {
+        if(firstRerender){
+            timeOutId.current = setTimeout(()=>{
+                getAllNhanVienChucVu(1,searchValue);
+            },[500]);
+        }else{
+            setFirstRerender(true);
+        }
+    }, [searchValue]);
+
     //handle OnChange SearchValue
     const handleChangeSearchValue = (e) => {
-        getAllNhanVienChucVu(1,e.target.value);
+        clearTimeout(timeOutId.current);
         setSearchValue(e.target.value);
     }
 
@@ -114,31 +129,37 @@ const QuanLyNhanVien = () => {
             render:(record)=>{
                 return(
                     <>
-                        <Button onClick={()=>{nav(`/bandaotao/quan-ly-nhan-vien/sua-nhan-vien/${record.id}`)}} style={{backgroundColor:"#030405",color:"#fff"}}>
-                            <EditOutlined style={{fontSize:"18px"}}/>
-                        </Button>
-                        <Button onClick={()=>{setOpenModalDetail(true) ;setNhanVienId(record.id)}} style={{margin:"0 10px"}}>
-                            <EyeOutlined style={{fontSize:"18px"}}/>
-                        </Button>
-                        <Button style={{backgroundColor:"red",color:"#fff"}}>
-                            <DeleteOutlined onClick={()=>{
-                                confirm({
-                                    title: 'Xác nhận',
-                                    icon: <ExclamationCircleFilled style={{color:"#faad14"}}/>,
-                                    content: 'Bạn có chắc muốn xóa nhân viên này?',
-                                    onOk: async () => {
-                                        try{
-                                            const response = await deleteNhanVien_API(record.id);
-                                            getAllNhanVienChucVu(1);
-                                            toast.success(response.data.message);
-                                        }catch (e) {
-                                            toast.error("Không tìm thấy nhân viên này!");
-                                        }
-                                    },
-                                    okCancel:true
-                                });
-                            }} style={{fontSize:"18px"}}/>
-                        </Button>
+                        <Tooltip title="Cập nhật" color="#030405">
+                            <Button onClick={()=>{nav(`/bandaotao/quan-ly-nhan-vien/sua-nhan-vien/${record.id}`)}} style={{backgroundColor:"#030405",color:"#fff"}}>
+                                <EditOutlined style={{fontSize:"18px"}}/>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="Chi tiết">
+                            <Button onClick={()=>{setOpenModalDetail(true) ;setNhanVienId(record.id)}} style={{margin:"0 10px"}}>
+                                <EyeOutlined style={{fontSize:"18px"}}/>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="Xóa nhân viên" color="red">
+                            <Button style={{backgroundColor:"red",color:"#fff"}}>
+                                <DeleteOutlined onClick={()=>{
+                                    confirm({
+                                        title: 'Xác nhận',
+                                        icon: <ExclamationCircleFilled style={{color:"#faad14"}}/>,
+                                        content: 'Bạn có chắc muốn xóa nhân viên này?',
+                                        onOk: async () => {
+                                            try{
+                                                const response = await deleteNhanVien_API(record.id);
+                                                getAllNhanVienChucVu(1);
+                                                toast.success(response.data.message);
+                                            }catch (e) {
+                                                toast.error("Không tìm thấy nhân viên này!");
+                                            }
+                                        },
+                                        okCancel:true
+                                    });
+                                }} style={{fontSize:"18px"}}/>
+                            </Button>
+                        </Tooltip>
                     </>
                 )
             },
@@ -181,8 +202,8 @@ const QuanLyNhanVien = () => {
                             <FileExcelOutlined style={{fontSize:"15px"}}/>
                             Import Excel
                         </Button>
-                        <Button onClick={()=>{nav(`/bandaotao/quan-ly-nhan-vien/them-nhan-vien`)}} type="primary" style={{display:"flex",alignItems:"center"}}>
-                            <PlusOutlined style={{fontSize:"15px"}}/>
+                        <Button  onClick={()=>{nav(`/bandaotao/quan-ly-nhan-vien/them-nhan-vien`)}} type="primary" style={{display:"flex",alignItems:"center"}}
+                        icon={<PlusOutlined style={{fontSize:"15px"}}/>}>
                             Thêm Nhân Viên
                         </Button>
                     </div>

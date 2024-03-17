@@ -37,7 +37,7 @@ const AddOrUpdateNhanVien = () => {
 
     const {loading,handlePostOrPutNhanVien,getAllNhanVienChucVuById} = useNhanVien();
 
-    const {id} = useParams();
+    const { id} = useParams();
 
     //UseEffect to determine whether to fillAllFields -> For Adding or Updating
     useEffect(() => {

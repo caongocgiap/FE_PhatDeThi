@@ -16,7 +16,6 @@ import ModalAddCoSo from "./ModalAddCoSo";
 import ModalUpdateCoSo from "./ModalUpdateCoSo";
 import { toast } from "react-toastify";
 import QuanLyBoMonTheoCoSo from "./quanlybomontheocoso/QuanLyBoMonTheoCoSo";
-import FileUpload from "../component/FileUpload";
 import Loading from "../../utils/Loading";
 import ModalImportExcel from "./ModalImportExcel";
 
