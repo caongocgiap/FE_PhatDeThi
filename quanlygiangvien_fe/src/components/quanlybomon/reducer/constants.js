@@ -1,0 +1,10 @@
+export const SET_DATA = 'set_data';
+export const SHOW_MODAL_ADD = 'show_modal_add';
+export const SHOW_MODAL_EDIT = 'show_modal_edit';
+export const SET_TARGET = 'set_target';
+export const SET_LOADING = 'set_loading';
+export const SET_KEYWORD = 'set_keyword';
+export const SET_PAGE = 'set_page';
+export const SET_PAGE_SIZE = 'set_page_size';
+export const SET_TOTAL_ELEMENT = 'set_page_element';
+export const RELOAD_DATA = 'reload_data';
